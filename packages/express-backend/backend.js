@@ -3,7 +3,6 @@ import express from "express";
 import cors from "cors";
 
 
-
 const users = {
   users_list: [
     {
@@ -52,6 +51,7 @@ const findUserById = (id) =>
   users["users_list"].find((user) => user["id"] === id);
 
 const addUser = (user) => {
+  user.id = Math.random();
   users["users_list"].push(user);
   return user;
 };
@@ -120,7 +120,7 @@ app.get("/users/:id", (req, res) => {
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
   addUser(userToAdd);
-  res.send();
+  res.status(201).send(userToAdd);
 });
 
 app.delete("/users/:id", (req,res) => {

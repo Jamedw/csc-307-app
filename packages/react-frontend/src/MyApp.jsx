@@ -8,14 +8,16 @@ import Form from "./Form";
 function MyApp() {
 
 
-  function updateList(person) 
-  {
-    setCharacters([characters, person]);
-  }
 
   const [characters, setCharacters] = useState([]);
 
   function removeOneCharacter(index) {
+    const promise = fetch("Http://localhost:8000/users/${}", {
+      method: "DELETE"
+    });
+    
+    return promise;
+
     const updated = characters.filter((character, i) => {
       return i !== index;
     });
@@ -26,6 +28,26 @@ function MyApp() {
     const promise = fetch("http://localhost:8000/users");
     return promise;
   }
+
+  function postUser(person) {
+    const promise = fetch("Http://localhost:8000/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(person),
+    });
+
+    return promise;
+  }
+
+  function updateList(person) { 
+    postUser(person)
+      .then(() => setCharacters([...characters, person]))
+      .catch((error) => {
+        console.log(error);
+      })
+}
 
   useEffect(() => {
     fetchUsers()

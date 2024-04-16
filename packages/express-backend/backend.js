@@ -129,6 +129,6 @@ app.delete("/users/:id", (req,res) => {
     res.status(404).send("Resource not found.");
   } else {
     deleteUser(id);
-    res.send();
+    res.send(204);
   }
 });

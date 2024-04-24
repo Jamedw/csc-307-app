@@ -1,37 +1,11 @@
 // backend.js
+import userService from "./services/user-service.js";
 import express from "express";
 import cors from "cors";
 
+console.log(userService.findAllUsers)
+const users = [userService.findAllUsers]
 
-const users = {
-  users_list: [
-    {
-      id: "xyz789",
-      name: "Charlie",
-      job: "Janitor"
-    },
-    {
-      id: "abc123",
-      name: "Mac",
-      job: "Bouncer"
-    },
-    {
-      id: "ppp222",
-      name: "Mac",
-      job: "Professor"
-    },
-    {
-      id: "yat999",
-      name: "Dee",
-      job: "Aspring actress"
-    },
-    {
-      id: "zap555",
-      name: "Dennis",
-      job: "Bartender"
-    }
-  ]
-};
 const app = express();
 const port = 8000;
 app.use(cors());
@@ -107,20 +81,29 @@ app.get("/users", (req, res) => {
   }
 });
 
-app.get("/users/:id", (req, res) => {
-  const id = req.params["id"]; //or req.params.id
-  let result = findUserById(id);
-  if (result === undefined) {
-    res.status(404).send("Resource not found.");
+app.get("/users/:id", async (req, res) => {
+  const id = req.params["id"];
+  userService.findUserById(id)
+  .then((result) => {
+  if (result) {
+  res.send(result);
   } else {
-    res.send(result);
+  res.status(404).send(`Not Found: ${id}`);
   }
+  })
+  .catch((error) => {
+  res.status(500).send(error.name);
+  });
 });
 
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
-  addUser(userToAdd);
-  res.status(201).send(userToAdd);
+  userService
+    .addUser(userToAdd)
+    .then((result) => res.status(201).send(result))
+    .catch((error) => {
+      res.status(500).send(error.name);
+      });
 });
 
 app.delete("/users/:id", (req,res) => {

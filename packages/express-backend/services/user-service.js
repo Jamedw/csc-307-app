@@ -21,9 +21,14 @@ function getUsers(name,job) {
     return promise;
 }
 
+function deleteUser(id) {
+  let promise = userModel.findByIdAndDelete({_id : id});
+  return promise;
+}
 
 function findUserById(id) {
-return userModel.findById({_id : id});
+let promise = userModel.findById({_id : id});
+return promise;
 }
 
 function addUser(user) {
@@ -32,4 +37,4 @@ function addUser(user) {
     return promise;
 }
 
-export default { getUsers, findUserById, addUser};
+export default { getUsers, findUserById, addUser, deleteUser};

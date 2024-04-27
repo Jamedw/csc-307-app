@@ -21,39 +21,7 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-const findUserById = (id) =>
-  users["users_list"].find((user) => user["id"] === id);
 
-const addUser = (user) => {
-  user.id = Math.random();
-  users["users_list"].push(user);
-  return user;
-};
-
-const deleteUser = (id) => {
-  users["users_list"] = users["users_list"].filter(
-    (user) => user["id"] != id
-  );
-};
-
-
-const findUserByName = (name) => {
-  return users["users_list"].filter(
-    (user) => user["name"] === name
-  );
-};
-
-const findUserByJob = (job) => {
-  return users["users_list"].filter(
-    (user) => user["job"] === job
-  );
-};
-
-const findUserByNameAndJob = (name,job) => {
-  return users["users_list"].filter(
-    (user) => (user["job"] === job && user["name"] === name)
-  );
-};
 
 app.get("/users", (req, res) => {
   const name = req.query["name"];
@@ -96,10 +64,11 @@ app.post("/users", (req, res) => {
 
 app.delete("/users/:id", (req,res) => {
   const id = req.params["id"];
-  if (id === undefined) {
-    res.status(404).send("Resource not found.");
-  } else {
-    deleteUser(id);
-    res.send(204);
-  }
+  userService
+    .deleteUser(id)
+    .then((result) => res.status(204))
+    .catch((error) => {
+      res.status(500).send(error.name);
+      })
+      ;
 });

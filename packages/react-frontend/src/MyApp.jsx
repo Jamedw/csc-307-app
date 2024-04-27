@@ -12,7 +12,7 @@ function MyApp() {
   const [characters, setCharacters] = useState([]);
 
   function removeOneCharacter(index) {
-    fetch("Http://localhost:8000/users/"+characters.at(index).id, {
+    fetch("Http://localhost:8000/users/"+characters.at(index)._id, {
       method: "DELETE"
     });
   
